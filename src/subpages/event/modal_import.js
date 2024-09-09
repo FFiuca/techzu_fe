@@ -11,6 +11,7 @@ import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 import moment from 'moment';
+import { getErrorMessage } from '@/helpers/error_helper';
 
 export default function ModalImport({
     modal,
@@ -19,6 +20,8 @@ export default function ModalImport({
     file,
     handleFileChange,
     handleUpload,
+    errorFormUpload,
+    resetFormUpload,
 }){
     const handleDownload = ()=>{
         window.open(ApiConfig.host+'/template/template-event.xlsx', '_self')
@@ -43,6 +46,7 @@ export default function ModalImport({
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                                     <Form.Label>Upload Template</Form.Label>
                                     <Form.Control type="file" accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' onChange={(e) => handleFileChange(e)}/>
+                                    <small className='text-danger'>{getErrorMessage(errorFormUpload, 'file')}</small>
                                 </Form.Group>
 
                             </Col>

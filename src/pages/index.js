@@ -61,6 +61,7 @@ export default function Index(){
     const [location, setLocation] = useState(null)
     const [reminder, setReminder] = useState([])
     const [member, setMember] = useState([])
+    const [formError, setFormError] = useState({})
 
     const resetForm = ()=>{
         setTitle(null)
@@ -70,6 +71,7 @@ export default function Index(){
         setLocation(null)
         setReminder([])
         setMember([])
+        setFormError({})
     }
     //SECTION END
 
@@ -78,9 +80,11 @@ export default function Index(){
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
+    const [errorFormUpload, setErrorFormUpload] = useState({})
 
     const resetFormUpload = ()=>{
         setFile(null)
+        setErrorFormUpload({})
     }
     //SECTION - END
 
@@ -218,9 +222,10 @@ export default function Index(){
     }
 
     const handleCreate = async ()=>{
+        let res
         try{
             let url = ApiConfig.apiEntry +'/user/event'
-            const res = await axios.post(url, normalizeData())
+            res = await axios.post(url, normalizeData())
 
             if (res.status!=200){
                 throw new Error('add error')
@@ -232,19 +237,23 @@ export default function Index(){
 
             toggleModal()
         }catch(e){
+            if(e.status==400)
+                setFormError(e.response.data.data)
+
             alert('failed')
             console.warn(e)
         }
     }
 
     const handleUpload = async ()=>{
+        let res
         try{
             let url = ApiConfig.apiEntry +'/user/event/store-batch'
 
             const fD = new FormData()
             fD.append('file', file)
 
-            const res = await axios.post(url, fD, {
+            res = await axios.post(url, fD, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
@@ -260,15 +269,19 @@ export default function Index(){
 
             toggleModalImport()
         }catch(e){
+            if(e.status==400)
+                setErrorFormUpload(e.response.data.data)
+
             alert('failed')
             console.warn(e)
         }
     }
 
     const handleUpdate = async (id)=>{
+        let res
         try{
             let url = ApiConfig.apiEntry +'/user/event/'+_id
-            const res = await axios.put(url, normalizeData())
+            res = await axios.put(url, normalizeData())
 
             if (res.status!=200){
                 throw new Error('add error')
@@ -280,6 +293,9 @@ export default function Index(){
 
             toggleModal()
         }catch(e){
+            if(e.status==400)
+                setFormError(e.response.data.data)
+
             alert('failed')
             console.warn(e)
         }
@@ -413,6 +429,10 @@ export default function Index(){
         console.log('rem', reminder)
     }, [reminder])
 
+    useEffect(()=>{
+        console.log('err', formError)
+    }, [formError])
+
     const handleDateClick = (arg) => {
         // alert(arg.dateStr)
         console.log(arg)
@@ -516,6 +536,7 @@ export default function Index(){
             handleCreate={handleCreate}
             _id={_id}
             resetForm={resetForm}
+            formError={formError}
 
             title={title}
             setTitle={setTitle}
@@ -545,6 +566,8 @@ export default function Index(){
             file={file}
             handleFileChange={handleFileChange}
             handleUpload={handleUpload}
+            errorFormUpload={errorFormUpload}
+            resetFormUpload={resetFormUpload}
         />
     </App>
 }

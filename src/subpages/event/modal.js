@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import  Form  from 'react-bootstrap/Form';
 import DateTimePicker from 'react-datetime-picker';
 import { useState } from 'react';
+import { getErrorMessage } from '@/helpers/error_helper';
 
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
@@ -21,6 +22,7 @@ export default function ModalEvent({
     handleCreate,
     _id,
     resetForm,
+    formError,
 
     title,
     setTitle,
@@ -64,6 +66,7 @@ export default function ModalEvent({
                                 <Form.Group className="mb-3">
                                     <Form.Label>Title</Form.Label>
                                     <Form.Control type="text" placeholder="" value={title} onChange={(e)=> setTitle(e.target.value)}/>
+                                    <small className='text-danger'>{getErrorMessage(formError, 'title')}</small>
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                                     <Form.Label>Description</Form.Label>
@@ -75,6 +78,7 @@ export default function ModalEvent({
                                 <Form.Group className="mb-3">
                                     <Form.Label>Date</Form.Label>
                                     <Form.Control type="date" placeholder="" value={eventDate} onChange={e=> setEventDate(e.target.value)}/>
+                                    <small className='text-danger'>{getErrorMessage(formError, 'event_date')}</small>
                                 </Form.Group>
                             </Col>
                             <Col md={6}>
