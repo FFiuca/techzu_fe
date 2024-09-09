@@ -441,7 +441,10 @@ export default function Index(){
     return <App>
         <Container>
             <Row>
-                <Col md={9}>
+                <Col md={9} style={{
+                    height:'100vH',
+                    overflowY:'auto',
+                 }}>
                     <FullCalendar
                         plugins={[ dayGridPlugin, interactionPlugin ]}
                         initialView="dayGridMonth"
@@ -491,7 +494,10 @@ export default function Index(){
                                 />
                             </Form>
                         </Col>
-                        <Col md={12}>
+                        <Col md={12} style={{
+                            maxHeight:'100vH',
+                            overflowY:'auto',
+                         }}>
                             <Card>
                                 <Card.Body>
                                     <ul style={{
